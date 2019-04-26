@@ -153,17 +153,5 @@ public class MachineTest {
     }
   }
 
-  @Test
-  public void canComputeOneOfTuringsExampleNumbers() {
 
-    Tape tape = new Tape();
-    Machine machine = Machines.increasingNumberOfOnesDelimitedByZero(tape);
-
-    for (int i = 0; i < 200; i++) {
-      System.out.println(tape);
-      machine.step();
-    }
-
-    System.out.println(tape.readBinarySequenceFromTape());
-  }
 }

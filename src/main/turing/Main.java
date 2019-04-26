@@ -11,7 +11,7 @@ public class Main {
 
   private static void interactiveComputation() throws InterruptedException {
     Tape tape = new Tape();
-    Machine machine = Machines.increasingNumberOfOnesDelimitedByZero(tape);
+    Machine machine = ExampleMachines.increasingNumberOfOnesDelimitedByZero(tape);
 
     System.out.println();
     System.out.println(

@@ -1,16 +1,18 @@
 package turing;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import turing.Instruction.LeftInstruction;
 import turing.Instruction.PrintInstruction;
 import turing.Instruction.RightInstruction;
 import turing.MConfiguration.Row;
+import turing.SymbolMatcher.MatchAny;
 import turing.SymbolMatcher.MatchAnyOf;
 import turing.SymbolMatcher.MatchAnySymbol;
 import turing.SymbolMatcher.MatchSymbol;
 
-public class Machines {
+public class ExampleMachines {
 
   // From p87 in "The Annotated Turing"
   // Produces the infinite sequence 001011011101111...
@@ -98,6 +100,31 @@ public class Machines {
 
     List<MConfiguration> mConfigurations = Arrays.asList(b0, o1, q2, p3, f4);
     return new Machine(mConfigurations, tape);
+  }
+
+  public static Machine zeros(Tape tape) {
+    MConfiguration mConfiguration = new MConfiguration(
+        new MatchAny(),
+        0,
+        new PrintInstruction('0'),
+        new RightInstruction());
+    return new Machine(Collections.singletonList(mConfiguration), tape);
+  }
+
+  public static Machine alternatingOnesAndZeros(Tape tape) {
+    MConfiguration a = new MConfiguration(
+        new MatchAny(),
+        1,
+        new PrintInstruction('0'),
+        new RightInstruction()
+    );
+    MConfiguration b = new MConfiguration(
+        new MatchAny(),
+        0,
+        new PrintInstruction('1'),
+        new RightInstruction()
+    );
+    return new Machine(Arrays.asList(a, b), tape);
   }
 
 }

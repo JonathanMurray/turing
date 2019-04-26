@@ -5,6 +5,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The tape is the output of the machine. Here is where the results will be printed. It can also be
+ * used by the machine as a scratchpad to store intermediate results that are needed for the
+ * computation.
+ *
+ * In the case of a "Universal Turing Machine", the tape contains "code" that the machine executes
+ * but that is outside the scope of this project.
+ */
 public class Tape {
 
   private final List<Character> list;

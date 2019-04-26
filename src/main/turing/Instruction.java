@@ -1,5 +1,9 @@
 package turing;
 
+/**
+ * Instructions modify the tape. Example: moving the header left/right on the tape, printing a new
+ * symbol to the tape, erasing a symbol from the tape.
+ */
 public interface Instruction {
 
   void applyOnTape(Tape tape);

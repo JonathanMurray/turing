@@ -6,6 +6,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * M-configurations are the internal logic of a machine. An m-configuration is a state that the
+ * machine is in. Only one m-configuration is active at any time.
+ *
+ * An m-configuration is defined by a set of rows on the form ("matched symbol", "instructions",
+ * "next m-config"). The machine interprets this as "If the symbol I'm scanning from the tape right
+ * now is accepted by this row, I will execute these instructions and then jump to the given next
+ * m-configuration"
+ */
 public class MConfiguration {
 
   private final List<Row> rows;

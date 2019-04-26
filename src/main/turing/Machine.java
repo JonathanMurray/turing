@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A machine is defined by it's m-configurations. Using their rules, it interacts with the tape. The
+ * end-goal is usually to compute a binary sequence by printing it on the tape.
+ */
 public class Machine {
 
   private final List<MConfiguration> mConfigurations;
@@ -22,7 +26,7 @@ public class Machine {
       if (invalidNextMConfigurationIndex.isPresent()) {
         throw new IllegalArgumentException(
             "MConfiguration has 'next' = " + invalidNextMConfigurationIndex.get()
-                + "! Valid index interval = [0, " + (mConfigurations.size()-1) + "]");
+                + "! Valid index interval = [0, " + (mConfigurations.size() - 1) + "]");
       }
     }
     this.tape = tape;

@@ -13,6 +13,7 @@ import turing.SymbolMatcher.MatchSymbol;
 public class Machines {
 
   // From p87 in "The Annotated Turing"
+  // Produces the infinite sequence 001011011101111...
   public static Machine increasingNumberOfOnesDelimitedByZero(Tape tape) {
     MConfiguration b0 = new MConfiguration(
         new MatchSymbol(null),

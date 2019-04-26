@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Rules used by m-configurations to determine the machine's course of action given what symbol it's
+ * currently scanning from the tape.
+ */
 public interface SymbolMatcher {
 
   boolean test(Character symbol);

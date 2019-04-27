@@ -23,11 +23,11 @@ public class Machine {
     for (MConfiguration mConfiguration : mConfigurations) {
       this.mConfigurations.put(mConfiguration.getId(), mConfiguration);
     }
-    assertNoCorrectMConfigurationJumps(this.mConfigurations);
+    assertNoInvalidMConfigurationJumps(this.mConfigurations);
     this.tape = tape;
   }
 
-  private void assertNoCorrectMConfigurationJumps(Map<String, MConfiguration> mConfigurations) {
+  private void assertNoInvalidMConfigurationJumps(Map<String, MConfiguration> mConfigurations) {
     for (MConfiguration mc : mConfigurations.values()) {
       Optional<String> invalidNextMConfigurationIndex = mc.getPossibleNextMConfigurationIndices()
           .filter((String index) -> !mConfigurations.containsKey(index))

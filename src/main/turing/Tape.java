@@ -53,9 +53,12 @@ public class Tape {
     return new ArrayList<>(list);
   }
 
-
   @Override
   public String toString() {
+    return getString();
+  }
+
+  public String getString() {
     StringBuilder sb = new StringBuilder();
     if (headerIndex == 0) {
       sb.append('(');
@@ -71,6 +74,35 @@ public class Tape {
         sb.append(ch).append(")");
       } else {
         sb.append(ch).append(" ");
+      }
+    }
+    return sb.toString();
+  }
+
+  public String getVerboseString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append('|');
+    for (int i = 0; i < list.size(); i++) {
+      Character symbol = list.get(i);
+      char ch = symbol != null ? symbol : ' ';
+      if (i == headerIndex) {
+        sb.append('(').append(ch).append(")|");
+      } else {
+        sb.append(' ').append(ch).append(" |");
+      }
+    }
+    return sb.toString();
+  }
+
+  public String getCompactString() {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < list.size(); i++) {
+      Character symbol = list.get(i);
+      char ch = symbol != null ? symbol : ' ';
+      if (i == headerIndex) {
+        sb.append('_');
+      } else {
+        sb.append(ch);
       }
     }
     return sb.toString();

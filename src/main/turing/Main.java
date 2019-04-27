@@ -21,7 +21,7 @@ public class Main {
     System.out.println("Tape: ");
     for (int i = 0; i < steps; i++) {
       Thread.sleep(sleep.toMillis());
-      System.out.print("\r" + tape);
+      System.out.print("\r" + tape.getString());
       machine.step();
     }
     System.out.println("\n\nMachine finished running.");

@@ -58,30 +58,48 @@ public class TapeTest {
   @Test
   public void demo() {
     Tape tape = new Tape();
-    System.out.println(tape);
     tape.right();
-    System.out.println(tape);
     tape.print('A');
-    System.out.println(tape);
     tape.right();
-    System.out.println(tape);
     tape.print('B');
-    System.out.println(tape);
     tape.right();
-    System.out.println(tape);
     tape.right();
-    System.out.println(tape);
     tape.print('A');
-    System.out.println(tape);
     tape.left();
-    System.out.println(tape);
     tape.print('X');
-    System.out.println(tape);
   }
 
   @Test
   public void canReadBinaryNumberFromTape() {
     Tape tape = new Tape(null, '1', null, 'A', '0', '0', '1', null);
     assertThat(tape.readBinarySequenceFromTape(), is("1001"));
+  }
+
+  @Test
+  public void canProduceVerboseStringRepresentation() {
+    Tape tape = new Tape('A', null, 'C', 'D', null, 'E');
+    assertThat(tape.getVerboseString(), is("|(A)|   | C | D |   | E |"));
+    tape.right();
+    assertThat(tape.getVerboseString(), is("| A |( )| C | D |   | E |"));
+    tape.right();
+    assertThat(tape.getVerboseString(), is("| A |   |(C)| D |   | E |"));
+  }
+
+  @Test
+  public void canProduceStringRepresentation() {
+    Tape tape = new Tape('A', null, 'C', 'D', null, 'E');
+    tape.right();
+    assertThat(tape.getString(), is(" A( )C D   E "));
+    tape.right();
+    assertThat(tape.getString(), is(" A  (C)D   E "));
+  }
+
+  @Test
+  public void canProduceCompactStringRepresentation(){
+    Tape tape = new Tape('A', null, 'C', 'D', null, 'E');
+    tape.right();
+    assertThat(tape.getCompactString(), is("A_CD E"));
+    tape.right();
+    assertThat(tape.getCompactString(), is("A _D E"));
   }
 }

@@ -1,6 +1,5 @@
 package turing;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +12,7 @@ public class Machine {
   private final List<MConfiguration> mConfigurations;
   private final Tape tape;
   private int activeMConfigurationIndex = 0;
-
-  private List<Integer> mConfigurationHistory = new ArrayList<>();
-  private List<Instruction> instructionHistory = new ArrayList<>();
+  private final MachineHistory history = new MachineHistory();
 
   public Machine(List<MConfiguration> mConfigurations, Tape tape) {
     this.mConfigurations = mConfigurations;
@@ -35,7 +32,7 @@ public class Machine {
   public void step() {
 
     MConfiguration activeMConfiguration = mConfigurations.get(activeMConfigurationIndex);
-    mConfigurationHistory.add(activeMConfigurationIndex);
+    history.mConfigurationVisited(activeMConfigurationIndex);
     Character scanned = tape.read();
     if (!activeMConfiguration.hasRowMatchingSymbol(scanned)) {
       throw new ScannedUnHandledSymbol("Machine crashed! Scanned '" + scanned
@@ -44,17 +41,13 @@ public class Machine {
     }
     for (Instruction instruction : activeMConfiguration.getInstructions(scanned)) {
       instruction.applyOnTape(tape);
-      instructionHistory.add(instruction);
+      history.instructionExecuted(instruction);
     }
     activeMConfigurationIndex = activeMConfiguration.getNextMConfiguration(scanned);
   }
 
-  public List<Integer> getMConfigurationHistory() {
-    return mConfigurationHistory;
-  }
-
-  public List<Instruction> getInstructionHistory() {
-    return instructionHistory;
+  public MachineHistory getHistory() {
+    return history;
   }
 
   public static class ScannedUnHandledSymbol extends RuntimeException {

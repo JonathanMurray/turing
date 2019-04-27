@@ -2,10 +2,30 @@ package turing;
 
 import java.io.InputStream;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Scanner;
 
 public class MachineRunner {
+
+  public static void runForDuration(Machine machine, Tape tape, Duration maxDuration) {
+    System.out.println("Running...");
+    Instant currentInstant = Instant.now();
+    Instant startTime = currentInstant;
+    Instant endTime = startTime.plus(maxDuration);
+    Instant nextPrint = currentInstant;
+    while (currentInstant.isBefore(endTime)) {
+      currentInstant = Instant.now();
+      machine.step();
+      if (currentInstant.isAfter(nextPrint)) {
+        System.out.print("\rDigits computed: " + tape.readBinarySequenceFromTape().length());
+        nextPrint = currentInstant.plus(Duration.ofMillis(100));
+      }
+    }
+
+    System.out.println("\n------------------------------------------");
+    printResults(machine, tape);
+  }
 
   public static void runInteractively(Machine machine, Tape tape, Duration sleepBetweenMConfigs,
       Duration sleepBetweenInstructions, InputStream userInputStream, TapeStringType tapeStringType)

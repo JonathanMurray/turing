@@ -22,6 +22,13 @@ public class MachineRunnerTest {
         TapeStringType.VERBOSE);
   }
 
+  @Test
+  public void canRunForDuration() {
+    Tape tape = new Tape();
+    Machine machine = ExampleMachines.increasingNumberOfOnesDelimitedByZero(tape);
+    MachineRunner.runForDuration(machine, tape, Duration.ZERO);
+  }
+
   private static class MockedInputStream extends InputStream {
 
     private final int[] inputs;

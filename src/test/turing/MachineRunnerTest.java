@@ -1,6 +1,8 @@
 package turing;
 
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.time.Duration;
 import org.junit.Test;
 
@@ -10,7 +12,8 @@ public class MachineRunnerTest {
   public void canRunVisually() throws InterruptedException {
     Tape tape = new Tape();
     Machine machine = ExampleMachines.increasingNumberOfOnesDelimitedByZero(tape);
-    MachineRunner.runVisually(machine, tape, 100, Duration.ZERO, TapeStringType.REGULAR);
+    MachineRunner.runVisually(machine, tape, 100, Duration.ZERO, TapeStringType.REGULAR,
+        new NoopPrintStream());
   }
 
   @Test
@@ -19,14 +22,26 @@ public class MachineRunnerTest {
     Machine machine = ExampleMachines.increasingNumberOfOnesDelimitedByZero(tape);
     MockedInputStream mockedUserInput = new MockedInputStream('\n', '\n', 'q', '\n');
     MachineRunner.runInteractively(machine, tape, Duration.ZERO, Duration.ZERO, mockedUserInput,
-        TapeStringType.VERBOSE);
+        TapeStringType.VERBOSE, new NoopPrintStream());
   }
 
   @Test
   public void canRunForDuration() {
     Tape tape = new Tape();
     Machine machine = ExampleMachines.increasingNumberOfOnesDelimitedByZero(tape);
-    MachineRunner.runForDuration(machine, tape, Duration.ZERO);
+    MachineRunner.runForDuration(machine, tape, Duration.ZERO, new NoopPrintStream());
+  }
+
+  private static class NoopPrintStream extends PrintStream {
+
+    public NoopPrintStream() {
+      super(new OutputStream() {
+        @Override
+        public void write(int b) {
+          // Do nothing
+        }
+      });
+    }
   }
 
   private static class MockedInputStream extends InputStream {

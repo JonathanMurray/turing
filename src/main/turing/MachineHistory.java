@@ -1,5 +1,6 @@
 package turing;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,15 +21,15 @@ public class MachineHistory {
     executedInstructions.add(instruction);
   }
 
-  public void printTechnicalReport() {
+  public void printTechnicalReport(PrintStream out) {
     HashMap<String, Integer> mcCounts = getMConfigurationVisitCounts();
     Map<String, Double> mcPercentages = getMConfigurationVisitPercentages();
-    System.out.println("Instructions executed: " + executedInstructions.size());
-    System.out.println("Number of times each m-configuration was visited:");
+    out.println("Instructions executed: " + executedInstructions.size());
+    out.println("Number of times each m-configuration was visited:");
     for (String mConfigurationId : mcCounts.keySet()) {
       int count = mcCounts.get(mConfigurationId);
       double percentage = mcPercentages.get(mConfigurationId);
-      System.out.println(String.format("  %s: %s (%.1f%%)",
+      out.println(String.format("  %s: %s (%.1f%%)",
           mConfigurationId, count, percentage * 100));
     }
   }

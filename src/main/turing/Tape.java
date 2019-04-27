@@ -59,6 +59,7 @@ public class Tape {
     return getString(TapeStringType.REGULAR);
   }
 
+  //Create a snapshot of the tape that remains the same even if the tape is modified
   public TapeSnapshot createSnapshot() {
     return new TapeSnapshot(new ArrayList<>(list), headerIndex);
   }

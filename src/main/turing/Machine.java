@@ -42,25 +42,24 @@ public class Machine {
   }
 
   public void step() {
-    MConfiguration activeMConfiguration = mConfigurations.get(activeMConfigurationId);
-    Character scanned = tape.read();
-    history.mConfigurationVisited(activeMConfigurationId);
-    for (Instruction instruction : getInstructions(activeMConfiguration, scanned)) {
-      instruction.applyOnTape(tape);
-      history.instructionExecuted(instruction);
-    }
-    activeMConfigurationId = activeMConfiguration.getNextMConfiguration(scanned);
+    step(false);
   }
 
   public List<TapeSnapshot> stepAndGetSnapshotAfterEachInstruction() {
+    return step(true);
+  }
+
+  private List<TapeSnapshot> step(boolean getTapeSnapshotsAfterEveryInstruction) {
+    List<TapeSnapshot> snapshots = new ArrayList<>();
     MConfiguration activeMConfiguration = mConfigurations.get(activeMConfigurationId);
     Character scanned = tape.read();
     history.mConfigurationVisited(activeMConfigurationId);
-    List<TapeSnapshot> snapshots = new ArrayList<>();
     for (Instruction instruction : getInstructions(activeMConfiguration, scanned)) {
       instruction.applyOnTape(tape);
       history.instructionExecuted(instruction);
-      snapshots.add(tape.createSnapshot());
+      if (getTapeSnapshotsAfterEveryInstruction) {
+        snapshots.add(tape.createSnapshot());
+      }
     }
     activeMConfigurationId = activeMConfiguration.getNextMConfiguration(scanned);
     return snapshots;

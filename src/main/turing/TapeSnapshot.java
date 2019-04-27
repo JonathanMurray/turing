@@ -2,6 +2,10 @@ package turing;
 
 import java.util.List;
 
+/**
+ * Represents the state of the tape at a given time. If a cloned symbol list is passed in, the
+ * snapshot remains the same even if the tape is modified.
+ */
 public class TapeSnapshot {
 
   private final List<Character> list;

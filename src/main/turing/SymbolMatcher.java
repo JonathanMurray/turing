@@ -1,8 +1,7 @@
 package turing;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Rules used by m-configurations to determine the machine's course of action given what symbol it's
@@ -62,10 +61,10 @@ public interface SymbolMatcher {
 
   class MatchAnyOf implements SymbolMatcher {
 
-    private final Set<Character> symbols;
+    private final List<Character> symbols;
 
     public MatchAnyOf(Character... symbols) {
-      this.symbols = new HashSet<>(Arrays.asList(symbols));
+      this.symbols = Arrays.asList(symbols);
     }
 
     @Override

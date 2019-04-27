@@ -78,28 +78,36 @@ public class TapeTest {
   @Test
   public void canProduceVerboseStringRepresentation() {
     Tape tape = new Tape('A', null, 'C', 'D', null, 'E');
-    assertThat(tape.getVerboseString(), is("|(A)|   | C | D |   | E |"));
+    assertThat(tape.getString(TapeStringType.VERBOSE), is("|(A)|   | C | D |   | E |"));
     tape.right();
-    assertThat(tape.getVerboseString(), is("| A |( )| C | D |   | E |"));
+    assertThat(tape.getString(TapeStringType.VERBOSE), is("| A |( )| C | D |   | E |"));
     tape.right();
-    assertThat(tape.getVerboseString(), is("| A |   |(C)| D |   | E |"));
+    assertThat(tape.getString(TapeStringType.VERBOSE), is("| A |   |(C)| D |   | E |"));
   }
 
   @Test
   public void canProduceStringRepresentation() {
     Tape tape = new Tape('A', null, 'C', 'D', null, 'E');
     tape.right();
-    assertThat(tape.getString(), is(" A( )C D   E "));
+    assertThat(tape.getString(TapeStringType.REGULAR), is(" A( )C D   E "));
     tape.right();
-    assertThat(tape.getString(), is(" A  (C)D   E "));
+    assertThat(tape.getString(TapeStringType.REGULAR), is(" A  (C)D   E "));
   }
 
   @Test
-  public void canProduceCompactStringRepresentation(){
+  public void canProduceCompactStringRepresentation() {
     Tape tape = new Tape('A', null, 'C', 'D', null, 'E');
     tape.right();
-    assertThat(tape.getCompactString(), is("A_CD E"));
+    assertThat(tape.getString(TapeStringType.COMPACT), is("A_CD E"));
     tape.right();
-    assertThat(tape.getCompactString(), is("A _D E"));
+    assertThat(tape.getString(TapeStringType.COMPACT), is("A _D E"));
+  }
+
+  @Test
+  public void readingTwiceShouldGiveSameValue() {
+    Tape tape = new Tape('A', 'B');
+    Character first = tape.read();
+    Character second = tape.read();
+    assertThat(first, is(second));
   }
 }

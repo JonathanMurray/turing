@@ -28,7 +28,7 @@ public class MachineHistory {
     for (String mConfigurationId : mcCounts.keySet()) {
       int count = mcCounts.get(mConfigurationId);
       double percentage = mcPercentages.get(mConfigurationId);
-      System.out.println(String.format("  %s: %s (%.2f%%)",
+      System.out.println(String.format("  %s: %s (%.1f%%)",
           mConfigurationId, count, percentage * 100));
     }
   }

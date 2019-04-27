@@ -47,7 +47,8 @@ public class MConfiguration {
     return rows.stream()
         .filter(r -> r.symbolMatcher.test(scannedSymbol))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Unmatched symbol: " + scannedSymbol));
+        .orElseThrow(
+            () -> new IllegalArgumentException(id + " can't handle symbol: " + scannedSymbol));
   }
 
   // Used for detecting unhandled symbols at runtime
@@ -81,4 +82,21 @@ public class MConfiguration {
     }
   }
 
+  @Override
+  public String toString() {
+    if (rows.size() == 1) {
+      Row row = rows.get(0);
+      return String.format(
+          "%s: %s --> %s --> %s", id, row.symbolMatcher, Arrays.toString(row.instructions),
+          row.nextMConfiguration);
+    } else {
+      StringBuilder sb = new StringBuilder(id + ":");
+      for (Row row : rows) {
+        sb.append(String.format(
+            "\n  %s --> %s --> %s", row.symbolMatcher, Arrays.toString(row.instructions),
+            row.nextMConfiguration));
+      }
+      return sb.toString();
+    }
+  }
 }

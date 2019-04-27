@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 
 public class MachineHistory {
 
-  private List<Integer> visitedMConfigurations = new ArrayList<>();
+  private List<String> visitedMConfigurations = new ArrayList<>();
   private List<Instruction> executedInstructions = new ArrayList<>();
 
-  public boolean mConfigurationVisited(int activeMConfigurationIndex) {
-    return visitedMConfigurations.add(activeMConfigurationIndex);
+  public boolean mConfigurationVisited(String activeMConfigurationId) {
+    return visitedMConfigurations.add(activeMConfigurationId);
   }
 
   public void instructionExecuted(Instruction instruction) {
@@ -21,28 +21,28 @@ public class MachineHistory {
   }
 
   public void printTechnicalReport() {
-    HashMap<Integer, Integer> mcCounts = getMConfigurationVisitCounts();
-    Map<Integer, Double> mcPercentages = getMConfigurationVisitPercentages();
+    HashMap<String, Integer> mcCounts = getMConfigurationVisitCounts();
+    Map<String, Double> mcPercentages = getMConfigurationVisitPercentages();
     System.out.println("Instructions executed: " + executedInstructions.size());
     System.out.println("Number of times each m-configuration was visited:");
-    for (int mConfigurationIndex : mcCounts.keySet()) {
-      int count = mcCounts.get(mConfigurationIndex);
-      double percentage = mcPercentages.get(mConfigurationIndex);
-      System.out.println(String.format("  m-config %s: %s (%.2f%%)",
-          mConfigurationIndex, count, percentage * 100));
+    for (String mConfigurationId : mcCounts.keySet()) {
+      int count = mcCounts.get(mConfigurationId);
+      double percentage = mcPercentages.get(mConfigurationId);
+      System.out.println(String.format("  %s: %s (%.2f%%)",
+          mConfigurationId, count, percentage * 100));
     }
   }
 
-  private HashMap<Integer, Integer> getMConfigurationVisitCounts() {
-    HashMap<Integer, Integer> mConfigurationCounts = new HashMap<>();
-    for (int mConfigurationIndex : visitedMConfigurations) {
-      Integer currentCount = mConfigurationCounts.putIfAbsent(mConfigurationIndex, 0);
-      mConfigurationCounts.put(mConfigurationIndex, currentCount != null ? currentCount + 1 : 1);
+  private HashMap<String, Integer> getMConfigurationVisitCounts() {
+    HashMap<String, Integer> mConfigurationCounts = new HashMap<>();
+    for (String mConfigurationId : visitedMConfigurations) {
+      Integer currentCount = mConfigurationCounts.putIfAbsent(mConfigurationId, 0);
+      mConfigurationCounts.put(mConfigurationId, currentCount != null ? currentCount + 1 : 1);
     }
     return mConfigurationCounts;
   }
 
-  private Map<Integer, Double> getMConfigurationVisitPercentages() {
+  private Map<String, Double> getMConfigurationVisitPercentages() {
     return getMConfigurationVisitCounts().entrySet().stream()
         .collect(Collectors.toMap(
             Entry::getKey,

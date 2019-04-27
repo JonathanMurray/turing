@@ -21,9 +21,10 @@ public class MachineTest {
   @Test
   public void shouldPrintToTapeWhenInstructedTo() {
     Tape tape = new Tape();
-    Machine machine = new Machine(Arrays
-        .asList(new MConfiguration(new MatchAny(), 0, new PrintInstruction('B'))),
-        tape);
+    List<MConfiguration> mConfigurations = Collections.singletonList(
+        new MConfiguration("mConfigId", new MatchAny(), "mConfigId", new PrintInstruction('B')));
+
+    Machine machine = new Machine(mConfigurations, tape);
     machine.step();
     assertThat(tape.read(), is('B'));
   }
@@ -31,10 +32,10 @@ public class MachineTest {
   @Test
   public void shouldPerformSeveralInstructions() {
     Tape tape = new Tape();
-    Machine machine = new Machine(
-        Arrays.asList(new MConfiguration(
-            new MatchAny(), 0, new PrintInstruction('B'),
-            new RightInstruction(), new PrintInstruction('C'))), tape);
+    List<MConfiguration> mConfigurations = Collections.singletonList(new MConfiguration("id",
+        new MatchAny(), "id", new PrintInstruction('B'),
+        new RightInstruction(), new PrintInstruction('C')));
+    Machine machine = new Machine(mConfigurations, tape);
     machine.step();
     assertThat(tape.read(), is('C'));
   }
@@ -44,10 +45,10 @@ public class MachineTest {
     Tape tape = new Tape();
     Machine machine = new Machine(
         Arrays.asList(
-            new MConfiguration(new MatchAny(), 1, new PrintInstruction('A'),
+            new MConfiguration("printA", new MatchAny(), "printB", new PrintInstruction('A'),
                 new RightInstruction()),
-            new MConfiguration(new MatchAny(),
-                0, new PrintInstruction('B'), new RightInstruction())
+            new MConfiguration("printB", new MatchAny(),
+                "printA", new PrintInstruction('B'), new RightInstruction())
         ),
         tape);
     machine.step();
@@ -61,10 +62,10 @@ public class MachineTest {
     Tape tape = new Tape();
     Machine machine = new Machine(
         Arrays.asList(
-            new MConfiguration(new MatchAny(), 1, new PrintInstruction('A'),
+            new MConfiguration("printA", new MatchAny(), "printB", new PrintInstruction('A'),
                 new RightInstruction()),
-            new MConfiguration(new MatchAny(),
-                0, new PrintInstruction('B'), new LeftInstruction(), new PrintInstruction('C'))
+            new MConfiguration("printB", new MatchAny(),
+                "printA", new PrintInstruction('B'), new LeftInstruction(), new PrintInstruction('C'))
         ),
         tape);
     machine.step();
@@ -80,14 +81,14 @@ public class MachineTest {
   @Test
   public void shouldUseScannedSymbolToDetermineNextMConfiguration() {
     List<MConfiguration> mConfigurations = Arrays.asList(
-        new MConfiguration(
+        new MConfiguration("1",
             new Row(
-                new MatchSymbol('X'), 1, new PrintInstruction('A'), new RightInstruction()),
+                new MatchSymbol('X'), "2", new PrintInstruction('A'), new RightInstruction()),
             new Row(
-                new MatchSymbol('Y'), 2, new PrintInstruction('B'), new RightInstruction())
+                new MatchSymbol('Y'), "3", new PrintInstruction('B'), new RightInstruction())
         ),
-        new MConfiguration(new MatchAny(), 0, new PrintInstruction('C')),
-        new MConfiguration(new MatchAny(), 0, new PrintInstruction('D'))
+        new MConfiguration("2", new MatchAny(), "1", new PrintInstruction('C')),
+        new MConfiguration("3", new MatchAny(), "1", new PrintInstruction('D'))
     );
 
     Tape tape = new Tape();
@@ -108,8 +109,10 @@ public class MachineTest {
   @Test
   public void canGenerateLongSequences() {
     List<MConfiguration> mConfigurations = Arrays.asList(
-        new MConfiguration(new MatchAny(), 1, new PrintInstruction('1'), new RightInstruction()),
-        new MConfiguration(new MatchAny(), 0, new PrintInstruction('0'), new RightInstruction())
+        new MConfiguration("printOne", new MatchAny(), "printZero", new PrintInstruction('1'),
+            new RightInstruction()),
+        new MConfiguration("printZero", new MatchAny(), "printOne", new PrintInstruction('0'),
+            new RightInstruction())
     );
     Tape tape = new Tape();
     Machine machine = new Machine(mConfigurations, tape);
@@ -125,8 +128,9 @@ public class MachineTest {
   @Test
   public void shouldCrashIfScanningUnHandledSymbol() {
     List<MConfiguration> mConfigurations = Arrays.asList(
-        new MConfiguration(new MatchAny(), 1, new PrintInstruction('1'), new RightInstruction()),
-        new MConfiguration(new MatchSymbol('X'), 0, new PrintInstruction('0'))
+        new MConfiguration("id", new MatchAny(), "id2", new PrintInstruction('1'),
+            new RightInstruction()),
+        new MConfiguration("id2", new MatchSymbol('X'), "id", new PrintInstruction('0'))
     );
     Machine machine = new Machine(mConfigurations, new Tape());
     machine.step();
@@ -144,12 +148,13 @@ public class MachineTest {
   public void shouldDetectInvalidConfigurationsAtStartup() {
     try {
       new Machine(
-          Collections.singletonList(new MConfiguration(new MatchAny(), 1, new RightInstruction())),
+          Collections.singletonList(
+              new MConfiguration("id", new MatchAny(), "nonExistent", new RightInstruction())),
           new Tape());
       fail();
     } catch (IllegalArgumentException e) {
       assertThat(e.getMessage(),
-          is("MConfiguration has 'next' = 1! Valid index interval = [0, 0]"));
+          is("MConfiguration has 'next' = 'nonExistent'! Valid values: [id]"));
     }
   }
 

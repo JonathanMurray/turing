@@ -18,8 +18,9 @@ public class ExampleMachines {
   // Produces the infinite sequence 001011011101111...
   public static Machine increasingNumberOfOnesDelimitedByZero(Tape tape) {
     MConfiguration b0 = new MConfiguration(
+        "b",
         new MatchSymbol(null),
-        1,
+        "o",
         new PrintInstruction('e'),
         new RightInstruction(),
         new PrintInstruction('e'),
@@ -32,9 +33,10 @@ public class ExampleMachines {
         new LeftInstruction());
 
     MConfiguration o1 = new MConfiguration(
+        "o",
         new Row(
             new MatchSymbol('1'),
-            1,
+            "o",
             new RightInstruction(),
             new PrintInstruction('x'),
             new LeftInstruction(),
@@ -43,88 +45,93 @@ public class ExampleMachines {
         ),
         new Row(
             new MatchSymbol('0'),
-            2
+            "q"
         )
     );
 
     MConfiguration q2 = new MConfiguration(
+        "q",
         new Row(
             new MatchAnyOf('0', '1'),
-            2,
+            "q",
             new RightInstruction(),
             new RightInstruction()
         ),
         new Row(
             new MatchSymbol(null),
-            3,
+            "p",
             new PrintInstruction('1'),
             new LeftInstruction()
         )
     );
 
     MConfiguration p3 = new MConfiguration(
+        "p",
         new Row(
             new MatchSymbol('x'),
-            2,
+            "q",
             new PrintInstruction(null),
             new RightInstruction()
         ),
         new Row(
             new MatchSymbol('e'),
-            4,
+            "f",
             new RightInstruction()
         ),
         new Row(
             new MatchSymbol(null),
-            3,
+            "p",
             new LeftInstruction(),
             new LeftInstruction()
         )
     );
 
     MConfiguration f4 = new MConfiguration(
+        "f",
         new Row(
             new MatchAnySymbol(),
-            4,
+            "f",
             new RightInstruction(),
             new RightInstruction()
         ),
         new Row(
             new MatchSymbol(null),
-            1,
+            "o",
             new PrintInstruction('0'),
             new LeftInstruction(),
             new LeftInstruction()
         )
     );
 
-    List<MConfiguration> mConfigurations = Arrays.asList(b0, o1, q2, p3, f4);
-    return new Machine(mConfigurations, tape);
+    return new Machine(Arrays.asList(b0, o1, q2, p3, f4), tape);
   }
 
   public static Machine zeros(Tape tape) {
-    MConfiguration mConfiguration = new MConfiguration(
+    List<MConfiguration> mConfigurations = Collections.singletonList(new MConfiguration(
+        "printZero",
         new MatchAny(),
-        0,
+        "printZero",
         new PrintInstruction('0'),
-        new RightInstruction());
-    return new Machine(Collections.singletonList(mConfiguration), tape);
+        new RightInstruction()));
+    return new Machine(mConfigurations, tape);
   }
 
   public static Machine alternatingOnesAndZeros(Tape tape) {
-    MConfiguration a = new MConfiguration(
+    List<MConfiguration> mConfigurations = Arrays.asList(new MConfiguration(
+        "printZero",
         new MatchAny(),
-        1,
+        "printOne",
         new PrintInstruction('0'),
         new RightInstruction()
-    );
-    MConfiguration b = new MConfiguration(
+    ), new MConfiguration(
+        "printOne",
         new MatchAny(),
-        0,
+        "printZero",
         new PrintInstruction('1'),
         new RightInstruction()
-    );
-    return new Machine(Arrays.asList(a, b), tape);
+    ));
+
+    return new Machine(mConfigurations, tape);
   }
 
 }

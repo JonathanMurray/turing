@@ -7,7 +7,7 @@ public class Main {
   public static void main(String[] args) throws InterruptedException {
     final Tape tape = new Tape();
     Machine machine = ExampleMachines.increasingNumberOfOnesDelimitedByZero(tape);
-    runInteractively(machine, tape, 20, Duration.ofMillis(1000));
+    runInteractively(machine, tape, 20, Duration.ofMillis(100));
   }
 
   private static void runInteractively(Machine machine, Tape tape, int steps, Duration sleep)

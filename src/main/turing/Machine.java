@@ -1,6 +1,8 @@
 package turing;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -9,30 +11,39 @@ import java.util.Optional;
  */
 public class Machine {
 
-  private final List<MConfiguration> mConfigurations;
+  private final Map<String, MConfiguration> mConfigurations;
   private final Tape tape;
-  private int activeMConfigurationIndex = 0;
   private final MachineHistory history = new MachineHistory();
+  private String activeMConfigurationId;
 
   public Machine(List<MConfiguration> mConfigurations, Tape tape) {
-    this.mConfigurations = mConfigurations;
-    for (MConfiguration mc : mConfigurations) {
-      Optional<Integer> invalidNextMConfigurationIndex = mc.getPossibleNextMConfigurationIndices()
-          .filter(index -> index < 0 || index >= mConfigurations.size())
+    activeMConfigurationId = mConfigurations.get(0).getId();
+    this.mConfigurations = new HashMap<>();
+    for (MConfiguration mConfiguration : mConfigurations) {
+      this.mConfigurations.put(mConfiguration.getId(), mConfiguration);
+    }
+    assertNoCorrectMConfigurationJumps(this.mConfigurations);
+    this.tape = tape;
+  }
+
+  private void assertNoCorrectMConfigurationJumps(Map<String, MConfiguration> mConfigurations) {
+    for (MConfiguration mc : mConfigurations.values()) {
+      Optional<String> invalidNextMConfigurationIndex = mc.getPossibleNextMConfigurationIndices()
+          .filter((String index) -> !mConfigurations.containsKey(index))
           .findFirst();
+
       if (invalidNextMConfigurationIndex.isPresent()) {
         throw new IllegalArgumentException(
-            "MConfiguration has 'next' = " + invalidNextMConfigurationIndex.get()
-                + "! Valid index interval = [0, " + (mConfigurations.size() - 1) + "]");
+            "MConfiguration has 'next' = '" + invalidNextMConfigurationIndex.get()
+                + "'! Valid values: " + mConfigurations.keySet());
       }
     }
-    this.tape = tape;
   }
 
   public void step() {
 
-    MConfiguration activeMConfiguration = mConfigurations.get(activeMConfigurationIndex);
-    history.mConfigurationVisited(activeMConfigurationIndex);
+    MConfiguration activeMConfiguration = mConfigurations.get(activeMConfigurationId);
+    history.mConfigurationVisited(activeMConfigurationId);
     Character scanned = tape.read();
     if (!activeMConfiguration.hasRowMatchingSymbol(scanned)) {
       throw new ScannedUnHandledSymbol("Machine crashed! Scanned '" + scanned
@@ -43,7 +54,7 @@ public class Machine {
       instruction.applyOnTape(tape);
       history.instructionExecuted(instruction);
     }
-    activeMConfigurationIndex = activeMConfiguration.getNextMConfiguration(scanned);
+    activeMConfigurationId = activeMConfiguration.getNextMConfiguration(scanned);
   }
 
   public MachineHistory getHistory() {
